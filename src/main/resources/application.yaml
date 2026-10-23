@@ -1,7 +1,8 @@
 spring:
   application:
     name: worklynk-ai
-
+  profiles:
+    active: local
   datasource:
     url: jdbc:postgresql://localhost:5432/worklynkjava
     username: ${DB_USERNAME}
@@ -24,4 +25,3 @@ spring:
     vectorstore:
       pgvector:
         initialize-schema: true
-    

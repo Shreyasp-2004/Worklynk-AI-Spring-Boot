@@ -21,6 +21,10 @@ public class Employee {
     @Column(unique = true, nullable = false)
     private String email;
 
+    // BCrypt hash, never the plain password. Null = cannot log in yet.
+    @Column(name = "password_hash")
+    private String passwordHash;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -33,4 +37,3 @@ public class Employee {
         HR_ADMIN
     }
 }
-

@@ -1,4 +1,3 @@
-
 package com.shreyas.worklynk_ai.ticket;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +9,9 @@ public interface TicketRepository
     List<Ticket> findByEmployeeId(Long employeeId);
 
     List<Ticket> findByStatus(Ticket.Status status);
+
+    List<Ticket> findByEmployee_Company_Id(Long companyId);
+
+    List<Ticket> findByEmployee_Company_IdAndStatus(
+            Long companyId, Ticket.Status status);
 }
