@@ -40,12 +40,22 @@ public class Ticket {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     public enum Category {
-        LEAVE,
-        PAYROLL,
-        BENEFITS,
-        IT_SUPPORT,
-        OTHER
+    LEAVE("time off such as annual, sick, casual, maternity or paternity leave"),
+    PAYROLL("salary, payslips, deductions and tax"),
+    BENEFITS("insurance, reimbursements and other employee benefits"),
+    IT_SUPPORT("laptops, accounts, passwords and software access"),
+    OTHER("anything that fits none of the other categories");
+
+    private final String description;
+
+    Category(String description) {
+        this.description = description;
     }
+
+    public String getDescription() {
+        return description;
+    }
+}
 
     public enum Status {
         OPEN,
