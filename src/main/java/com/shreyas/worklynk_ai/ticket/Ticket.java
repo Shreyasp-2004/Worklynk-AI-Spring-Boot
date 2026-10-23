@@ -1,0 +1,62 @@
+
+package com.shreyas.worklynk_ai.ticket;
+
+import com.shreyas.worklynk_ai.employee.Employee;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+public class Ticket {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String subject;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String description;
+
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.OPEN;
+
+    @Enumerated(EnumType.STRING)
+    private Priority priority = Priority.MEDIUM;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    public enum Category {
+        LEAVE,
+        PAYROLL,
+        BENEFITS,
+        IT_SUPPORT,
+        OTHER
+    }
+
+    public enum Status {
+        OPEN,
+        IN_PROGRESS,
+        RESOLVED,
+        CLOSED
+    }
+
+    public enum Priority {
+        LOW,
+        MEDIUM,
+        HIGH
+    }
+}
