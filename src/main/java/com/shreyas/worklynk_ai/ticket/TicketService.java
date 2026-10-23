@@ -1,9 +1,9 @@
-
 package com.shreyas.worklynk_ai.ticket;
 
 import com.shreyas.worklynk_ai.employee.Employee;
 import com.shreyas.worklynk_ai.employee.EmployeeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -42,16 +42,38 @@ public class TicketService {
     public List<Ticket> getEmployeeTickets(Long employeeId) {
         return ticketRepository.findByEmployeeId(employeeId);
     }
+
+    /** All tickets in one company, optionally filtered by status. */
+    public List<Ticket> getCompanyTickets(
+            Long companyId, Ticket.Status status) {
+        return status == null
+                ? ticketRepository.findByEmployee_Company_Id(companyId)
+                : ticketRepository.findByEmployee_Company_IdAndStatus(
+                        companyId, status);
+    }
+
+    /**
+     * HR can only change tickets from their own company. A ticket from
+     * another company is reported as "not found".
+     */
+    @Transactional
     public Ticket updateTicketStatus(
-        Long ticketId,
-        Ticket.Status status) {
+            Long ticketId,
+            Ticket.Status status,
+            Long companyId) {
 
-    Ticket ticket = ticketRepository.findById(ticketId)
-            .orElseThrow(() ->
-                    new RuntimeException("Ticket not found"));
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() ->
+                        new RuntimeException("Ticket not found"));
 
-    ticket.setStatus(status);
+        Long ticketCompanyId =
+                ticket.getEmployee().getCompany().getId();
 
-    return ticketRepository.save(ticket);
-}
+        if (!ticketCompanyId.equals(companyId)) {
+            throw new RuntimeException("Ticket not found");
+        }
+
+        ticket.setStatus(status);
+        return ticketRepository.save(ticket);
+    }
 }
